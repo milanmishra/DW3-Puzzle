@@ -11,4 +11,18 @@ describe('When: I use the reading list feature', () => {
       'My Reading List'
     );
   });
+
+  it('Then: I should be able to add book to the reading list and remove it', () => {
+    cy.get('input[type="search"]').type('AA');
+
+    cy.get('[data-testing="add-book"]').first().click();
+
+    cy.get('[data-testing="toggle-reading-list"]').click();
+
+    cy.get('[data-testing="reading-list-container"]').should('have.length', 1);
+
+    cy.get('[data-testing="remove-book"]').last().click();
+
+    cy.get('[data-testing="reading-list-item"]').should('have.length', 0);
+  });
 });
