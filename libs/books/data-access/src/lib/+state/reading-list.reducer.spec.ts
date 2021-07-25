@@ -7,6 +7,12 @@ import {
 } from './reading-list.reducer';
 import { createBook, createReadingListItem } from '@tmo/shared/testing';
 
+const readingResponse: any = {
+  reading: {
+    bookId: 'ptiYBAAAQBAJ'
+  },
+};
+
 describe('Reading List Reducer', () => {
   describe('valid Reading List actions', () => {
     let state: State;
@@ -64,7 +70,7 @@ describe('Reading List Reducer', () => {
 
     it('failedRemoveFromReadingList should not remove book from the state', () => {
       const action = ReadingListActions.failedRemoveFromReadingList({
-        item: createReadingListItem('C')
+        item: createReadingListItem('C'),
       });
 
       const result: State = reducer(state, action);
@@ -80,6 +86,20 @@ describe('Reading List Reducer', () => {
       const result = reducer(initialState, action);
 
       expect(result).toEqual(initialState);
+    });
+  });
+
+  describe('setMockDataForReadingList', () => {
+    it('should set mock data for reading list', () => {
+      const mockData = readingResponse;
+
+      const action = ReadingListActions.setMockDataForReadingList({
+        mockData
+      });
+
+      const result = reducer(initialState, action);
+
+      expect(result).not.toBeUndefined();
     });
   });
 });

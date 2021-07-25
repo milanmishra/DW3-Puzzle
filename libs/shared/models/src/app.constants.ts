@@ -19,4 +19,12 @@ export const okReadsConstants = {
     READING_API: '/api/reading-list',
     BOOK_SEARCH_API: '/api/books/search?q=',
   },
+
+  SNACKBAR_ACTIONS: {
+    BOOK_ADDED: 'Added to the reading list!',
+    BOOK_REMOVED: 'Removed from the reading list!',
+    BOOK_ADDED_CLASS: 'bookAdded',
+    BOOK_REMOVED_CLASS: 'bookRemoved',
+    ACTION: 'Undo',
+  },
 };

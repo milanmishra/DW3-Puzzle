@@ -38,6 +38,6 @@ describe('ReadingListComponent', () => {
 
     component.removeFromReadingList(book);
 
-    expect(store.dispatch).toHaveBeenCalledWith(removeFromReadingList({ item: book }));
+    expect(store.dispatch).toHaveBeenCalledWith(removeFromReadingList({ item: book, showSnackBar:true  }));
   });
 });

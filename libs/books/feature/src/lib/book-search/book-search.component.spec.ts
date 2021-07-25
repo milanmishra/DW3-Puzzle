@@ -103,7 +103,7 @@ describe('BookSearchComponent', () => {
     wantToReadBtn.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(
-      addToReadingList({ book: bookToRead })
+      addToReadingList({ book: bookToRead, showSnackBar:true  })
     );
     discardPeriodicTasks();
   }));
