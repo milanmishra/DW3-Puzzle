@@ -27,10 +27,6 @@ describe('When: I use the reading list feature', () => {
   it('Then: I should be able to add book to the reading list and remove it', () => {
     cy.get('input[type="search"]').type('AA');
 
-    cy.get('[data-testing="search-button"]').click()
-
-    cy.wait(5000);
-
     cy.get('[data-testing="add-book"]').first().click();
 
     cy.get('[data-testing="toggle-reading-list"]').click();

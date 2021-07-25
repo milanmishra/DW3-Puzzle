@@ -1,4 +1,4 @@
-<form [formGroup]="searchForm" (submit)="searchBooks()">
+<form [formGroup]="searchForm">
   <mat-form-field floatLabel="never">
     <input
       autoFocus
@@ -8,16 +8,6 @@
       formControlName="term"
     />
     <button
-      mat-icon-button
-      matSuffix
-      aria-label="Search button"
-      [disabled]="!searchForm.valid"
-      data-testing="search-button"
-    >
-      <mat-icon aria-label="Search icon">{{
-        constants.CONSTANTS.SEARCH_BUTTON
-      }}</mat-icon></button
-    ><button
       mat-icon-button
       matSuffix
       aria-label="Reset Search"

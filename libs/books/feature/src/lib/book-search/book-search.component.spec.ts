@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedTestingModule, createBook } from '@tmo/shared/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -42,40 +42,6 @@ describe('BookSearchComponent', () => {
     expect(component).toBeDefined();
   });
 
-  it('should test search form validity', () => {
-    const form = component.searchForm;
-
-    expect(form.valid).toBeFalsy();
-
-    const term = component.searchForm.controls['term'];
-    term.setValue('javascript');
-
-    expect(form.valid).toBeTruthy();
-  });
-
-  it('should disable the search button when search term is not provided', () => {
-    const term = component.searchForm.controls['term'];
-    term.setValue(null);
-
-    const searchBtn = fixture.nativeElement.querySelector(
-      '[data-testing="search-button"]'
-    );
-
-    expect(searchBtn.disabled).toBeTruthy();
-  });
-
-  it('should enable the search button when search term is provided', () => {
-    const term = component.searchForm.controls['term'];
-    term.setValue('javascript');
-    fixture.detectChanges();
-
-    const searchBtn = fixture.nativeElement.querySelector(
-      '[data-testing="search-button"]'
-    );
-
-    expect(searchBtn.disabled).toBeFalsy();
-  });
-
   it('should show clear button', () => {
     const clearbtn = fixture.nativeElement.querySelector(
       '[data-testing="clear-button"]'
@@ -84,22 +50,37 @@ describe('BookSearchComponent', () => {
     expect(clearbtn).not.toBeNull();
   });
 
-  it('should dispatch searchBooks action and show list of books when search keyword is provided and search button is clicked', () => {
+  it('should dispatch searchBooks action and show list of books when search keyword is provided', fakeAsync(() => {
     const term = component.searchForm.controls['term'];
     term.setValue('javascript');
-    fixture.detectChanges();
-    const searchBtn = fixture.nativeElement.querySelector(
-      '[data-testing="search-button"]'
-    );
 
-    searchBtn.click();
+    fixture.detectChanges();
+    tick(500)
 
     expect(store.dispatch).toHaveBeenCalledWith(
       searchBooks({ term: 'javascript' })
     );
+    discardPeriodicTasks();
+  }));
+
+  it('should not dispatch searchBooks action when time spent after entering search term is less than 500ms', fakeAsync(() => {
+    const term = component.searchForm.controls['term'];
+    term.setValue('javascript');
+
+    fixture.detectChanges();
+    tick(400)
+
+    expect(store.dispatch).not.toHaveBeenCalledWith();
+    discardPeriodicTasks();
+  }));
+
+  it("should search book when book search value is javascript",  () => {
+    component.searchExample();
+
+    expect(component.searchForm.value.term).toEqual("javascript");
   });
 
-  it('should dispatch addToReadingList action and add book to the reading list when Want To Add button is clicked', () => {
+  it('should dispatch addToReadingList action and add book to the reading list when Want To Add button is clicked', fakeAsync(() => {
     const bookToRead = { ...createBook('A'), isAdded: false };
     store.overrideSelector(getAllBooks, [
       { ...bookToRead },
@@ -108,29 +89,27 @@ describe('BookSearchComponent', () => {
     const term = component.searchForm.controls['term'];
     term.setValue('javascript');
     fixture.detectChanges();
-    const searchBtn = fixture.nativeElement.querySelector(
-      '[data-testing="search-button"]'
-    );
-
-    searchBtn.click();
-  
+    tick(500)
     store.refreshState();
     fixture.detectChanges();
-    const addBook = fixture.nativeElement.querySelector(
+
+    const wantToReadBtn = fixture.nativeElement.querySelector(
       '[data-testing="add-book"]'
     );
-
-    addBook.click();
+    wantToReadBtn.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(
       addToReadingList({ book: {...bookToRead, isAdded: true} })
     );
-  });
+    discardPeriodicTasks();
+  }));
 
-  it('should dispatch clearSearch action and clear the search bar when clear button is clicked', () => {
+  it('should dispatch clearSearch action and clear the search bar when clear button is clicked', fakeAsync(() => {
     const term = component.searchForm.controls['term'];
     term.setValue('javascript');
     fixture.detectChanges();
+    tick(500)
+
     const clearbtn = fixture.nativeElement.querySelector(
       '[data-testing="clear-button"]'
     );
@@ -138,5 +117,19 @@ describe('BookSearchComponent', () => {
     clearbtn.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(clearSearch());
+    discardPeriodicTasks();
+  }));
+
+  describe('ngOnDestroy()', () => {
+    it('should unsubscribe to input stream when component is destroyed', fakeAsync(() => {
+      component.ngOnDestroy();
+
+      const term = component.searchForm.controls['term'];
+      term.setValue('javascript');
+
+      tick(500);
+
+      expect(store.dispatch).not.toHaveBeenCalled();
+    }));
   });
 });

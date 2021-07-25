@@ -2,7 +2,7 @@ import { initialState, reducer, State } from './books.reducer';
 import * as BooksActions from './books.actions';
 import { createBook } from '@tmo/shared/testing';
 
-const bookResponse = {
+const bookResponse: any = {
   book: {
     id: "ptiYBAAAQBAJ",
     title: "JavaScript & jQuery: The Missing Manua",
