@@ -35,14 +35,20 @@ describe('ReadingList Selectors', () => {
   });
 
   describe('Books Selectors', () => {
-    it('getReadingList() should return the list of Books', () => {
+
+    it('should return the list of Books when getAllBooks() gets invoked', () => {
+      const results = ToReadSelectors.getAllBooks(state);
+      expect(results.length).toBe(3);
+    });
+    
+    it('should return the list of Books when getReadingList() gets invoked', () => {
       const results = ToReadSelectors.getReadingList(state);
 
       expect(results.length).toBe(3);
-      expect(results.map(x => x.bookId)).toEqual(['A', 'B', 'C']);
+      expect(results.map(book => book.bookId)).toEqual(['A', 'B', 'C']);
     });
 
-    it("getTotalUnread() should return the current 'loaded' status", () => {
+    it("should return the current 'loaded' status when getTotalUnread() gets invoked", () => {
       const result = ToReadSelectors.getTotalUnread(state);
 
       expect(result).toBe(3);

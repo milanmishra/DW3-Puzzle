@@ -13,6 +13,16 @@ describe('Books Reducer', () => {
       expect(result.loaded).toBe(true);
       expect(result.ids.length).toBe(3);
     });
+
+    it('should show error when there is a book search failure', () => {
+        const error = '';
+        const action = BooksActions.searchBooksFailure({error})
+
+        const result: State = reducer(initialState, action);
+
+        expect(result.loaded).toBe(false);
+        expect(result.ids.length).toBe(0);
+    })
   });
 
   describe('unknown action', () => {

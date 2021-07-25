@@ -1,12 +1,21 @@
 <ng-container *ngIf="(readingList$ | async).length > 0; else empty">
-  <div class="reading-list-item" *ngFor="let b of readingList$ | async">
+  <div
+    class="reading-list-item"
+    data-testing="reading-list-item"
+    *ngFor="let b of readingList$ | async"
+  >
     <div>
-      <img class="reading-list-item--cover" [src]="b.coverUrl" />
+      <img
+        class="reading-list-item-cover"
+        [src]="b.coverUrl"
+        alt="Book image"
+        title="{{ b.title }}"
+      />
     </div>
-    <div class="reading-list-item--details">
-      <strong class="reading-list-item--details--title">{{ b.title }}</strong>
-      <div class="reading-list-item--details--author">
-        {{ b.authors.join(',') }}
+    <div class="reading-list-item-details">
+      <strong class="reading-list-item-details-title">{{ b.title }}</strong>
+      <div class="reading-list-item-details-author">
+        {{ b.authors.join(',') ? b.authors.join(',') : 'No Author mentioned' }}
       </div>
     </div>
     <div>
@@ -15,6 +24,8 @@
         color="warn"
         [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
         (click)="removeFromReadingList(b)"
+        aria-label="remove-button"
+        data-testing="remove-book"
       >
         <mat-icon>remove_circle</mat-icon>
       </button>
@@ -22,5 +33,5 @@
   </div>
 </ng-container>
 <ng-template #empty>
-  <p class="empty">You haven't added any books to your reading list yet.</p>
+  <p class="empty">{{ constants.CONSTANTS.NO_BOOKS_ADDED }}</p>
 </ng-template>
