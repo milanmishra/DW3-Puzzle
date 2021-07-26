@@ -24,7 +24,7 @@ import { Subject } from 'rxjs';
 export class BookSearchComponent implements OnInit, OnDestroy {
   constants = okReadsConstants;
   books$ = this.store.select(getAllBooks);
-  
+
   private notifier: Subject<boolean> = new Subject();
 
   searchForm = this.fb.group({
@@ -54,7 +54,7 @@ export class BookSearchComponent implements OnInit, OnDestroy {
   }
 
   addBookToReadingList = (book: Book) => {
-    this.store.dispatch(addToReadingList({ book, showSnackBar:true  }));
+    this.store.dispatch(addToReadingList({ book, showSnackBar: true }));
   }
 
   searchExample = () => {
@@ -63,11 +63,11 @@ export class BookSearchComponent implements OnInit, OnDestroy {
   }
 
   searchBooks = () => {
-    if (this.searchTerm) {
-      this.store.dispatch(searchBooks({ term: this.searchTerm }))
-    }
+    this.searchTerm
+      ? this.store.dispatch(searchBooks({ term: this.searchTerm }))
+      : this.store.dispatch(clearSearch());
   }
-  
+
   resetSearch = () => {
     this.searchForm.controls.term.setValue('');
     this.store.dispatch(clearSearch());
