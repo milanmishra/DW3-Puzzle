@@ -38,6 +38,7 @@ describe('ReadingList Selectors', () => {
 
     it('should return the list of Books when getAllBooks() gets invoked', () => {
       const results = ToReadSelectors.getAllBooks(state);
+      
       expect(results.length).toBe(3);
     });
     
@@ -45,6 +46,7 @@ describe('ReadingList Selectors', () => {
       const results = ToReadSelectors.getReadingList(state);
 
       expect(results.length).toBe(3);
+
       expect(results.map(book => book.bookId)).toEqual(['A', 'B', 'C']);
     });
 

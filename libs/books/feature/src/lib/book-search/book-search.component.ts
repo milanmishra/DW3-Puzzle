@@ -40,9 +40,8 @@ export class BookSearchComponent {
   }
 
   searchBooks = () => {
-    if (this.searchTerm) {
-      this.store.dispatch(searchBooks({ term: this.searchTerm }))
-    }
+    if (this.searchTerm)
+      this.store.dispatch(searchBooks({ term: this.searchTerm }));
   }
 
   resetSearch() {

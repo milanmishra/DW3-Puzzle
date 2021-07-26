@@ -11,7 +11,7 @@ which contains both the frontend and the backend of the application in one place
 ---------------------------------------------------------------------------------------------------------
 
 
-#### CODE SMELLS:
+#### CODE SMELLS AND IMPROVEMENTS:
     1. File - book-search.component.html
             The template contains a date function to change the format of the date. 
 
@@ -33,6 +33,14 @@ which contains both the frontend and the backend of the application in one place
     2. File - books.effect.spec.ts
              Maybe for better control, we can use Promises instead of 
              done.
+             Promises are used to handle multiple asynchronous operations easily and it 
+             also provide better error handling than done.
+             We should avoid using done() in multiple asynchronous operations, because even 
+             when some situation goes wrong, the test will be passed. We are not precise when 
+             we use done() in callback. 
+             Eg. When Observable emits 2x, but the second time it does something different 
+             than we expect = test is green
+             When Observable errors after first emit = test is green.
 
 
     3. File - book-search.component.ts
@@ -94,6 +102,11 @@ which contains both the frontend and the backend of the application in one place
                 *ngFor="let b of books$ | async"
 
         ```
+        Using of `subscribe()` introduces complementary need to unsubscribe at the end of 
+        the component life-cycle to avoid memory leaks. We have to unsubscribe it manually.
+        Angular handles subscriptions of `| async` pipes for us automatically so there is no 
+        need to unsubscribe manually in the component using ngOnDestroy. This leads to less 
+        verbosity and hence less possibilities for making a mistake.
 
 
     6. File: total-count.component.ts
@@ -191,6 +204,7 @@ which contains both the frontend and the backend of the application in one place
 
         Fixed the test cases for reading-list.reducer.ts
 
+
     12. File: book-search.component.html
 
         Author name, Publisher name, Published Date and Descriptions are displayed empty for some books
@@ -218,6 +232,8 @@ which contains both the frontend and the backend of the application in one place
         ```
                 {{ b.authors.join(',') ? b.authors.join(',') : 'No Author mentioned' }}
         ```
+
+
     13. File: book-search.component.html
         Search results are displayed based on the criteria - whether `searchTerm` is present or not. 
         When we clear the `searchTerm` in input field, the result array remains present in the state. Hence, when we type any letter in input field the previous result array will be displayed again.
@@ -227,6 +243,7 @@ which contains both the frontend and the backend of the application in one place
         ```
                 <ng-container *ngIf="(books$ | async).length; else empty">
         ```
+
 
     14. Added clear button to clear out the searchTerm at once and also call clearSearch action.
         File: book-search.component.html
@@ -259,7 +276,8 @@ which contains both the frontend and the backend of the application in one place
 
     4. Application can be made responsive for mobile phones.
 
-    5. We can have a floating label on the book search field.
+    5. We can have a placeholder which shifts up once user enters a keyword on the book search 
+        field. Currently, the placeholder disappears as soon as the user starts typing. 
 
 
 

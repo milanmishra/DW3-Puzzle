@@ -32,7 +32,7 @@ describe('ReadingListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should remove book from reading list', () => {
+  it('should remove book from reading list when remove button is clicked', () => {
     fixture.detectChanges();
     const book: ReadingListItem = createReadingListItem('B');
 
