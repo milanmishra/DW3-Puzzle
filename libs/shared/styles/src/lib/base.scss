@@ -21,3 +21,21 @@ input {
   border: 1px solid $gray40;
   padding: $spacing-xxs;
 }
+
+.bookRemoved.mat-snack-bar-container{
+  background-color: $red;
+  color: $white;
+}
+.bookAdded.mat-snack-bar-container{
+  background-color: $green;
+  color: $white;
+}
+.mat-simple-snackbar-action {
+    color: $black ;
+    font-weight: 200;
+    background-color: $white;
+    border-radius: 3px;
+}
+.mat-simple-snackbar {
+    font-weight: 200;
+}

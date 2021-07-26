@@ -27,7 +27,7 @@ export class BookSearchComponent {
   ) {}
 
   addBookToReadingList = (book: Book) => {
-    this.store.dispatch(addToReadingList({ book: {...book, isAdded: true} }));
+    this.store.dispatch(addToReadingList({ book: {...book, isAdded: true}, showSnackBar: true }));
   }
 
   searchExample = () => {

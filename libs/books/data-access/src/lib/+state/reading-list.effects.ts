@@ -3,9 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, concatMap, exhaustMap, map } from 'rxjs/operators';
-import { ReadingListItem } from '@tmo/shared/models';
+import { Book, ReadingListItem } from '@tmo/shared/models';
 import * as ReadingListActions from './reading-list.actions';
 import { okReadsConstants } from '@tmo/shared/models';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class ReadingListEffects implements OnInitEffects {
@@ -28,9 +30,14 @@ export class ReadingListEffects implements OnInitEffects {
   addBook$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReadingListActions.addToReadingList),
-      concatMap(({ book }) =>
+      concatMap(({ book, showSnackBar }) =>
         this.http.post(`${okReadsConstants.API_LINKS.READING_API}`, book).pipe(
-          map(() => ReadingListActions.confirmedAddToReadingList({ book })),
+          map(() => {
+            if (showSnackBar) {
+              this.addBookSnackbar(book);
+            }
+            return ReadingListActions.confirmedAddToReadingList({ book });
+          }),
           catchError(() =>
             of(ReadingListActions.failedAddToReadingList({ book }))
           )
@@ -42,22 +49,75 @@ export class ReadingListEffects implements OnInitEffects {
   removeBook$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReadingListActions.removeFromReadingList),
-      concatMap(({ item }) =>
-      this.http.delete(`${okReadsConstants.API_LINKS.READING_API}/${item.bookId}`).pipe(
-        map(() =>
-            ReadingListActions.confirmedRemoveFromReadingList({ item })
-          ),
-          catchError(() =>
-            of(ReadingListActions.failedRemoveFromReadingList({ item }))
+      concatMap(({ item, showSnackBar }) =>
+        this.http
+          .delete(`${okReadsConstants.API_LINKS.READING_API}/${item.bookId}`)
+          .pipe(
+            map(() => {
+              if (showSnackBar) {
+                this.removeBookSnackbar(item);
+              }
+              return ReadingListActions.confirmedRemoveFromReadingList({
+                item,
+              });
+            }),
+            catchError(() =>
+              of(ReadingListActions.failedRemoveFromReadingList({ item }))
+            )
           )
-        )
       )
     )
   );
+
+  private addBookSnackbar(book: Book) {
+    const snackBarRef = this.snackBar.open(
+      `${book.title} - ${okReadsConstants.SNACKBAR_ACTIONS.BOOK_ADDED}`,
+      `${okReadsConstants.SNACKBAR_ACTIONS.ACTION}`,
+      {
+        duration: okReadsConstants.SNACKBAR_ACTIONS.DURATION,
+        panelClass: `${okReadsConstants.SNACKBAR_ACTIONS.BOOK_ADDED_CLASS}`,
+      }
+    );
+    snackBarRef.onAction().subscribe(() =>
+      this.store.dispatch(
+        ReadingListActions.removeFromReadingList({
+          item: {
+            bookId: book.id,
+            ...book,
+          },
+          showSnackBar: false,
+        })
+      )
+    );
+  }
+
+  private removeBookSnackbar(item: ReadingListItem) {
+    const snackBarRef = this.snackBar.open(
+      `${item.title} - ${okReadsConstants.SNACKBAR_ACTIONS.BOOK_REMOVED}`,
+      `${okReadsConstants.SNACKBAR_ACTIONS.ACTION}`,
+      {
+        duration: okReadsConstants.SNACKBAR_ACTIONS.DURATION,
+        panelClass: `${okReadsConstants.SNACKBAR_ACTIONS.BOOK_REMOVED_CLASS}`,
+      }
+    );
+    snackBarRef.onAction().subscribe(() =>
+      this.store.dispatch(
+        ReadingListActions.addToReadingList({
+          book: { id: item.bookId, ...item },
+          showSnackBar: false,
+        })
+      )
+    );
+  }
 
   ngrxOnInitEffects() {
     return ReadingListActions.init();
   }
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
+    private store: Store
+  ) {}
 }
