@@ -42,7 +42,17 @@ export const confirmedRemoveFromReadingList = createAction(
   props<{ item: ReadingListItem }>()
 );
 
-export const setMockDataForReadingList = createAction(
-  '[Reading List API] Store Mock Data',
-  props<{ mockData: any }>()
+export const markBookAsFinished = createAction(
+  '[Reading List API] Mark book as finished',
+  props<{ item: ReadingListItem }>()
+);
+
+export const failedMarkBookAsFinished = createAction(
+  '[Reading List API] Failed to mark book as finished',
+  props<{ error: string }>()
+);
+
+export const confirmedMarkBookAsFinished = createAction(
+  '[Reading List API] Confirmed Mark book as finished',
+  props<{ item: ReadingListItem }>()
 );

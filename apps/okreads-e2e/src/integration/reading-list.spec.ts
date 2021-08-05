@@ -24,21 +24,23 @@ describe('When: I use the reading list feature', () => {
     );
   });
 
-  it('Then: I should be able to add book to the reading list and remove it', () => {
-    cy.get('input[type="search"]').type('AA');
+  it('Then: I should be able to add book to the reading list and mark it as finished', () => {
+    cy.get('input[type="search"]').type('test');
 
-    cy.get('[data-testing="search-button"]').click()
+    cy.get('form').submit();
 
-    cy.wait(5000);
-
-    cy.get('[data-testing="add-book"]').first().click();
+    cy.get('[data-testing="want-to-read-btn"]').first().click();
 
     cy.get('[data-testing="toggle-reading-list"]').click();
 
-    cy.get('[data-testing="reading-list-container"]').should('have.length', 1);
+    cy.get('.reading-list-item').should('have.length', 1);
 
-    cy.get('[data-testing="remove-book"]').last().click();
+    cy.get('[data-testing="want-to-read-btn"]').first().should('have.text', ' Want to Read ');
 
-    cy.get('[data-testing="reading-list-item"]').should('have.length', 0);
-  });
+    cy.get('[data-testing="mark-as-finished"]').click();
+
+    cy.get('[data-testing="finished-book-on"]').first().invoke('text').should('match', /^ Finished /);
+
+    cy.get('[data-testing="want-to-read-btn"]').first().should('have.text', ' Finished ');
+  })
 });

@@ -33,6 +33,12 @@ describe('BookSearchComponent', () => {
     store.overrideSelector(getAllBooks, [
       { ...createBook('A'), isAdded: false, publishedDate: null },
       { ...createBook('B'), isAdded: false },
+      {
+        ...createBook('C'),
+        isAdded: true,
+        finished: true,
+        finishedDate: new Date().toISOString(),
+      }
     ]);
     fixture.detectChanges();
     spyOn(store, 'dispatch');
@@ -123,7 +129,7 @@ describe('BookSearchComponent', () => {
     addBook.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(
-      addToReadingList({ book: {...bookToRead, isAdded: true} })
+      addToReadingList({ book: { ...bookToRead, isAdded: true } })
     );
   });
 
@@ -138,5 +144,66 @@ describe('BookSearchComponent', () => {
     clearbtn.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(clearSearch());
+  });
+
+  it('should show disabled Want to add button when book is already added to the reading list', () => {
+    const bookToRead = { ...createBook('A'), isAdded: true };
+
+    store.overrideSelector(getAllBooks, [
+      { ...bookToRead },
+      { ...createBook('B'), isAdded: true },
+    ]);
+
+    const term = component.searchForm.controls['term'];
+    term.setValue('A');
+    fixture.detectChanges();
+
+    const searchBtn = fixture.nativeElement.querySelector(
+      '[data-testing="search-button"]'
+    );
+    searchBtn.click();
+    store.refreshState();
+    fixture.detectChanges();
+
+    const wantToReadBtn = fixture.nativeElement.querySelector(
+      '[data-testing="want-to-read-btn"]'
+    );
+    expect(wantToReadBtn.disabled).toBeTruthy();
+  });
+
+  it('should show disabled Finished button when book is already added to the reading list and is marked as finished', () => {
+    const bookToRead = {
+      ...createBook('D'),
+      isAdded: true,
+      finished: true,
+      finishedDate: new Date().toISOString(),
+    };
+
+    store.overrideSelector(getAllBooks, [
+      { ...bookToRead },
+      {
+        ...createBook('C'),
+        isAdded: true,
+        finished: true,
+        finishedDate: new Date().toISOString(),
+      },
+    ]);
+
+    const term = component.searchForm.controls['term'];
+    term.setValue('D');
+    fixture.detectChanges();
+
+    const searchBtn = fixture.nativeElement.querySelector(
+      '[data-testing="search-button"]'
+    );
+    searchBtn.click();
+    store.refreshState();
+    fixture.detectChanges();
+
+    const finishedButton = fixture.nativeElement.querySelector(
+      '[data-testing="want-to-read-btn"]'
+    );
+    
+    expect(finishedButton.disabled).toBeTruthy();
   });
 });

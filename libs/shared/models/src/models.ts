@@ -6,7 +6,7 @@ export interface Book {
   publisher?: string;
   publishedDate?: string;
   coverUrl?: string;
-  isAdded?: boolean;
+  isAdded?: boolean
 }
 
 export interface ReadingListItem extends Omit<Book, 'id'> {

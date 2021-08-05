@@ -1,5 +1,5 @@
 <ng-container *ngIf="(readingList$ | async).length > 0; else empty">
-  <div
+  <mat-card
     class="reading-list-item"
     data-testing="reading-list-item"
     *ngFor="let b of readingList$ | async"
@@ -17,20 +17,53 @@
       <div class="reading-list-item-details-author">
         {{ b.authors.join(',') ? b.authors.join(',') : 'No Author mentioned' }}
       </div>
+      <div
+        class="reading-list-item-details-finishedDate"
+        *ngIf="b.finished"
+      >
+        <span data-testing="finished-book-on">
+          {{ constants.CONSTANTS.FINISHED_BOOK_ON }}:
+          {{ b.finishedDate | date: 'dd/MM/yyy' }}
+        </span>
+      </div>
     </div>
     <div>
-      <button
-        mat-icon-button
-        color="warn"
-        [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
-        (click)="removeFromReadingList(b)"
-        aria-label="remove-button"
-        data-testing="remove-book"
-      >
-        <mat-icon>remove_circle</mat-icon>
-      </button>
+        <button
+          mat-icon-button
+          *ngIf="b.finished; else marked"
+          [disabled]="true"
+          [attr.aria-label]="'book - ' + b.title + ' marked as finished!'"
+          aria-label="marked as finished button"
+          title="Book marked as finished"
+        >
+          <mat-icon>{{ constants.CONSTANTS.DONE_ALL_ICON }}</mat-icon>
+        </button>
+        <ng-template #marked>
+          <button
+            mat-icon-button
+            data-testing="mark-as-finished"
+            class="mark-as-finished"
+            [attr.aria-label]="'Mark ' + b.title + ' as finished'"
+            aria-label="mark as finished button"
+            (click)="markBookAsFinished(b)"
+            title="Mark book as finished"
+          >
+            <mat-icon>{{ constants.CONSTANTS.CHECK_CIRCLE_ICON }}</mat-icon>
+          </button>
+        </ng-template>  
+        <button
+          mat-icon-button
+          color="warn"
+          [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
+          (click)="removeFromReadingList(b)"
+          aria-label="remove-button"
+          data-testing="remove-book"
+          title="remove book from reading list"
+        >
+          <mat-icon>{{ constants.CONSTANTS.REMOVE_CIRCLE_ICON }}</mat-icon>
+        </button>
     </div>
-  </div>
+  </mat-card>
 </ng-container>
 <ng-template #empty>
   <p class="empty">{{ constants.CONSTANTS.NO_BOOKS_ADDED }}</p>
