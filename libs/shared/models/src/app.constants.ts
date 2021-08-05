@@ -10,9 +10,15 @@ export const okReadsConstants = {
     AUTHOR: 'Author',
     PUBLISHER: 'Publisher',
     PUBLISHED: 'Published',
-    SEARCH: 'search',
+    SEARCH_ICON: 'search',
     NO_BOOKS_ADDED: "You haven't added any books to your reading list yet.",
-    CLEAR: 'clear',
+    CLEAR_ICON: 'clear',
+    FINISHED: 'finished',
+    FINISHED_BUTTON: 'Finished',
+    FINISHED_BOOK_ON: 'Finished book on',
+    CHECK_CIRCLE_ICON: 'check_circle',
+    DONE_ALL_ICON: 'done_all',
+    REMOVE_CIRCLE_ICON: 'remove_circle'
   },
 
   API_LINKS: {

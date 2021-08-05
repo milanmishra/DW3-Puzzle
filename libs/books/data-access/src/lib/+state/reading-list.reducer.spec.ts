@@ -71,6 +71,31 @@ describe('Reading List Reducer', () => {
 
       expect(result.ids).toEqual(['A', 'B', 'C']);
     });
+
+    it('should mark book as finished in the state when confirmedMarkBookAsFinished action is dispatched', () => {
+      const bookFinished = {
+        ...createReadingListItem('A'),
+        finished: true,
+        finishedDate: new Date().toISOString()    
+      }
+      const action = ReadingListActions.confirmedMarkBookAsFinished({
+        item: bookFinished
+      });
+
+      const result: State = reducer(state, action);
+
+      expect(result.entities['A']?.finished).toBeTruthy();
+    });
+
+    it('should not mark book as finished in the state when failedMarkAsFinished action is dispatched', () => {
+      const action = ReadingListActions.failedMarkBookAsFinished({
+        error: 'API error'
+      });
+
+      const result: State = reducer(state, action);
+
+      expect(result.error).toEqual('API error');
+    });
   });
 
   describe('unknown action', () => {
