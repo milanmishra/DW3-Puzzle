@@ -36,11 +36,17 @@ const booksReducer = createReducer(
       loaded: true
     })
   ),
-  on(BooksActions.searchBooksFailure, (state, { error }) => ({
+  on(BooksActions.searchBooksFailure, (state, action) => ({
     ...state,
-    error
+    error: action.error
   })),
-  on(BooksActions.clearSearch, state => booksAdapter.removeAll(state))
+  on(BooksActions.clearSearch, state => booksAdapter.removeAll(state)),
+  on(BooksActions.setMockDataForBook, (state, data) => {
+    return {
+      ...state,
+      ...data.mockData,
+    };
+  })
 );
 
 export function reducer(state: State | undefined, action: Action) {

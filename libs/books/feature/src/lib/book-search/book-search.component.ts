@@ -26,12 +26,8 @@ export class BookSearchComponent {
     private readonly fb: FormBuilder
   ) {}
 
-  get searchTerm(): string {
-    return this.searchForm.value.term;
-  }
-
   addBookToReadingList = (book: Book) => {
-    this.store.dispatch(addToReadingList({ book }));
+    this.store.dispatch(addToReadingList({ book: {...book, isAdded: true} }));
   }
 
   searchExample = () => {
@@ -40,11 +36,10 @@ export class BookSearchComponent {
   }
 
   searchBooks = () => {
-    if (this.searchTerm)
-      this.store.dispatch(searchBooks({ term: this.searchTerm }));
+      this.store.dispatch(searchBooks({ term: this.searchForm.value.term }));
   }
 
-  resetSearch() {
+  resetSearch = () => {
     this.searchForm.controls.term.setValue('');
     this.store.dispatch(clearSearch());
   }

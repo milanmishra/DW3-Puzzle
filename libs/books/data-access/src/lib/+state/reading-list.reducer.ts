@@ -58,7 +58,13 @@ const readingListReducer = createReducer(
   ),
   on(ReadingListActions.failedRemoveFromReadingList, (state, action) =>
     readingListAdapter.addOne(action.item, state)
-  )
+  ),  
+  on(ReadingListActions.setMockDataForReadingList, (state, data) => {
+    return {
+      ...state,
+      ...data.mockData,
+    };
+  })
 );
 
 export function reducer(state: State | undefined, action: Action) {

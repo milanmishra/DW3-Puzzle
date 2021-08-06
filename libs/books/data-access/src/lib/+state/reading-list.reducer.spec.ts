@@ -7,6 +7,12 @@ import {
 } from './reading-list.reducer';
 import { createBook, createReadingListItem } from '@tmo/shared/testing';
 
+const readingResponse = {
+  reading: {
+    bookId: 'ptiYBAAAQBAJ',
+  },
+};
+
 describe('Reading List Reducer', () => {
   describe('valid Reading List actions', () => {
     let state: State;
@@ -18,7 +24,7 @@ describe('Reading List Reducer', () => {
       );
     });
 
-    it('loadBooksSuccess should load books from reading list', () => {
+    it('should load books from reading list when loadBooksSuccess action is dispatched', () => {
       const list = [
         createReadingListItem('A'),
         createReadingListItem('B'),
@@ -32,7 +38,7 @@ describe('Reading List Reducer', () => {
       expect(result.ids.length).toEqual(3);
     });
 
-    it('confirmedAddToReadingList should add book addition to the state', () => {
+    it('should add book addition to the state when confirmedAddToReadingList action is dipatched', () => {
       const action = ReadingListActions.confirmedAddToReadingList({
         book: createBook('C')
       });
@@ -42,7 +48,7 @@ describe('Reading List Reducer', () => {
       expect(result.ids).toEqual(['A', 'B', 'C']);
     });
 
-    it('confirmedRemoveFromReadingList should remove book addition from the state', () => {
+    it('should remove book addition from the state when confirmedRemoveFromReadingList action is dispatched', () => {
       const action = ReadingListActions.confirmedRemoveFromReadingList({
         item: createReadingListItem('B')
       });
@@ -52,7 +58,7 @@ describe('Reading List Reducer', () => {
       expect(result.ids).toEqual(['A']);
     });
 
-    it('failedAddToReadingList should not add book to the state', () => {
+    it('should not add book to the state when failedAddToReadingList action is dispatched', () => {
       const action = ReadingListActions.failedAddToReadingList({
         book: createBook('D')
       });
@@ -62,7 +68,7 @@ describe('Reading List Reducer', () => {
       expect(result.ids).toEqual(['A', 'B']);
     });
 
-    it('failedRemoveFromReadingList should not remove book from the state', () => {
+    it('should not remove book from the state when failedRemoveFromReadingList action is dispatched', () => {
       const action = ReadingListActions.failedRemoveFromReadingList({
         item: createReadingListItem('C')
       });
@@ -70,6 +76,17 @@ describe('Reading List Reducer', () => {
       const result: State = reducer(state, action);
 
       expect(result.ids).toEqual(['A', 'B', 'C']);
+    });
+
+    it('should show error when loadReadingListError action is dispatched', () => {
+      const error = 'API failure'
+      const action = ReadingListActions.loadReadingListError({
+        error
+      });
+
+      const result: State = reducer(state, action);
+
+      expect(result.error).toEqual(error);
     });
   });
 
@@ -80,6 +97,19 @@ describe('Reading List Reducer', () => {
       const result = reducer(initialState, action);
 
       expect(result).toEqual(initialState);
+    });
+  });
+
+  describe('setMockDataForReadingList', () => {
+    it('should set mock data for reading list', () => {
+      const mockData = readingResponse;
+      const action = ReadingListActions.setMockDataForReadingList({
+        mockData,
+      });
+
+      const result = reducer(initialState, action);
+
+      expect(result).not.toBeUndefined();
     });
   });
 });

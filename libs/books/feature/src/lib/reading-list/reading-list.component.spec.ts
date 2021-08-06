@@ -23,7 +23,10 @@ describe('ReadingListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ReadingListComponent);
     component = fixture.componentInstance;
-    store.overrideSelector(getReadingList, []);
+    store.overrideSelector(getReadingList, [
+      { ...createReadingListItem('A'), isAdded: true },
+      { ...createReadingListItem('B'), isAdded: true },
+    ]);
     fixture.detectChanges();
     spyOn(store, 'dispatch')
   });
@@ -33,11 +36,18 @@ describe('ReadingListComponent', () => {
   });
 
   it('should remove book from reading list when remove button is clicked', () => {
-    fixture.detectChanges();
-    const book: ReadingListItem = createReadingListItem('B');
+    const readingList = { ...createReadingListItem('A'), isAdded: true };
+    store.overrideSelector(getReadingList, [
+      { ...readingList }
+    ]);
+    const removeBtn = fixture.nativeElement.querySelector(
+      '[data-testing="remove-book"]'
+    );
 
-    component.removeFromReadingList(book);
+    removeBtn.click();
 
-    expect(store.dispatch).toHaveBeenCalledWith(removeFromReadingList({ item: book }));
+    expect(store.dispatch).toHaveBeenCalledWith(
+      removeFromReadingList({ item: readingList })
+    );
   });
 });

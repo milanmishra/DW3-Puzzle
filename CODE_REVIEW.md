@@ -156,7 +156,7 @@ which contains both the frontend and the backend of the application in one place
         component test case.
         We should always provide a meaningful and correct test case descriptions.
 
-        File: reading-list.reducer.spec.ts
+        -> File: reading-list.reducer.spec.ts
 
         ```
                 describe('Books Reducer', () => {}
@@ -172,18 +172,33 @@ which contains both the frontend and the backend of the application in one place
                 describe('valid Reading List actions', () => {}
         ```
 
-       File: book-search.component.spec.ts
+        -> File: book-search.component.spec.ts
 
         ```
                 describe('ProductListComponent', () => {}
         ```
 
             As the test case is related to book search component the description should be
-            Product List Component.
+            BookSearchComponent.
         
         ```
                 describe('BookSearchComponent', () => {}
         ```
+
+        -> File: books.effects.spec.ts
+        
+        ```
+            describe('loadBooks$', () => {}
+        ```
+
+            As the test cases are related to searchBooks$ effect, the description shoud be 
+            related to searchBooks$.
+
+        ```
+            describe('searchBooks$', () => {}
+        ```
+
+        -> Updated descriptions of all the test cases with ```should...when...``` format.
 
 
     10. File: books.reducer.spec.ts
@@ -258,7 +273,35 @@ which contains both the frontend and the backend of the application in one place
             bar and call clearSearch action.
 
 
+    15. When we add a book to the reading list, the state is not updated with status isAdded as TRUE.
+        So, in order to make the status isAdded as TRUE we can pass it in the addToReadingList action
+        when it is dispatched.
+        File: book-search.component.ts
 
+        ```
+            this.store.dispatch(addToReadingList({ book: {...book, isAdded: true} }));
+        ```
+
+        And add one more value in the book interface.
+        File: index.ts (shared/models/src)
+
+        ```
+            export interface Book {
+                ..
+                ..
+                isAdded?: boolean
+            }
+        ``` 
+        Now, whenever we add a book to the reading list, the status isAdded will also get updated to TRUE.
+
+    
+    16. File: book-search.component.ts
+        We can ommit the method ```get searchTerm()``` because the search term value can be directly
+        accessed by ```this.searchForm.value.term```.
+        There is no need of a separate method.
+
+
+    18. Added multiple test cases for all the existing code.
 
 
 ---------------------------------------------------------------------------------------------------------

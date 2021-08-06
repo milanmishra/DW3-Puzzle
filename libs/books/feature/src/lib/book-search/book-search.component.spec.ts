@@ -44,6 +44,7 @@ describe('BookSearchComponent', () => {
 
   it('should test search form validity', () => {
     const form = component.searchForm;
+
     expect(form.valid).toBeFalsy();
 
     const term = component.searchForm.controls['term'];
@@ -87,10 +88,10 @@ describe('BookSearchComponent', () => {
     const term = component.searchForm.controls['term'];
     term.setValue('javascript');
     fixture.detectChanges();
-
     const searchBtn = fixture.nativeElement.querySelector(
       '[data-testing="search-button"]'
     );
+
     searchBtn.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(
@@ -100,29 +101,29 @@ describe('BookSearchComponent', () => {
 
   it('should dispatch addToReadingList action and add book to the reading list when Want To Add button is clicked', () => {
     const bookToRead = { ...createBook('A'), isAdded: false };
-
     store.overrideSelector(getAllBooks, [
       { ...bookToRead },
       { ...createBook('B'), isAdded: false },
     ]);
-
     const term = component.searchForm.controls['term'];
     term.setValue('javascript');
     fixture.detectChanges();
-
     const searchBtn = fixture.nativeElement.querySelector(
       '[data-testing="search-button"]'
     );
+
     searchBtn.click();
+  
     store.refreshState();
     fixture.detectChanges();
-
-    const wantToReadBtn = fixture.nativeElement.querySelector(
-      '[data-testing="want-to-read-btn"]'
+    const addBook = fixture.nativeElement.querySelector(
+      '[data-testing="add-book"]'
     );
-    wantToReadBtn.click();
+
+    addBook.click();
+
     expect(store.dispatch).toHaveBeenCalledWith(
-      addToReadingList({ book: bookToRead })
+      addToReadingList({ book: {...bookToRead, isAdded: true} })
     );
   });
 
@@ -130,10 +131,10 @@ describe('BookSearchComponent', () => {
     const term = component.searchForm.controls['term'];
     term.setValue('javascript');
     fixture.detectChanges();
-
     const clearbtn = fixture.nativeElement.querySelector(
       '[data-testing="clear-button"]'
     );
+
     clearbtn.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(clearSearch());
