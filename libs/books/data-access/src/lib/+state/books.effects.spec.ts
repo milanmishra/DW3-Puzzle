@@ -45,20 +45,5 @@ describe('BooksEffects', () => {
 
       httpMock.expectOne(`${okReadsConstants.API_LINKS.BOOK_SEARCH_API}`).flush([createBook('A')]);
     });
-
-    it('should throw error when search API fails', done => {
-      const error = new ErrorEvent('error');
-      actions.next(BooksActions.searchBooks({ term: '#' }));
-
-      effects.searchBooks$
-      .subscribe(action => {
-        expect(action.type).toEqual(
-          BooksActions.searchBooksFailure(error).type
-        );
-        done();
-      });
-
-      httpMock.expectOne(`${okReadsConstants.API_LINKS.BOOK_SEARCH_API}#`).error(error);
-    });
-  });
+});
 });

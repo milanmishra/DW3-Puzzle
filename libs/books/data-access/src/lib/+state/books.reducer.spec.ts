@@ -57,17 +57,4 @@ describe('Books Reducer', () => {
       expect(result).toBe(initialState);
     });
   });
-  
-  describe('setMockDataForBook', () => {
-    it('should set mock data for book', () => {
-      const mockData = bookResponse;
-      const action = BooksActions.setMockDataForBook({
-        mockData
-      });
-
-      const result = reducer(initialState, action);
-
-      expect(result).not.toBeUndefined();
-    });
-  });
 });

@@ -1,6 +1,18 @@
 describe('When: I use the reading list feature', () => {
   beforeEach(() => {
     cy.startAt('/');
+
+    cy.get('[data-testing="toggle-reading-list"]').click();
+
+    cy.get('body').then((readingList) =>{
+      if(readingList.find('.reading-list-item').length > 0){
+        cy.get('[data-testing="remove-book"]').click({ multiple: true });
+        cy.get('[data-testing="close-reading-list"]').click();
+      }
+       else {
+              cy.get('[data-testing="close-reading-list"]').click();
+       }
+    });
   });
 
   it('Then: I should see my reading list', () => {

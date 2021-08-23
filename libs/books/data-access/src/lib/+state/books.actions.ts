@@ -17,8 +17,3 @@ export const searchBooksFailure = createAction(
 );
 
 export const clearSearch = createAction('[Books Search Bar] Clear Search');
-
-export const setMockDataForBook = createAction(
-  '[Book Search API] Store Mock Data',
-  props<{ mockData: any }>()
-);
