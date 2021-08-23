@@ -13,8 +13,8 @@ export const loadReadingListError = createAction(
 );
 
 export const addToReadingList = createAction(
-  '[Reading List API] Add to list',
-  props<{ book: Book }>()
+  '[Books Search Results] Add to list',
+  props<{ book: Book, showSnackBar: boolean }>()
 );
 
 export const failedAddToReadingList = createAction(
@@ -28,8 +28,8 @@ export const confirmedAddToReadingList = createAction(
 );
 
 export const removeFromReadingList = createAction(
-  '[Reading List API] Remove from list',
-  props<{ item: ReadingListItem }>()
+  '[Books Search Results] Remove from list',
+  props<{ item: ReadingListItem, showSnackBar: boolean }>()
 );
 
 export const failedRemoveFromReadingList = createAction(

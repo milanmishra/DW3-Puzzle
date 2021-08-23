@@ -123,7 +123,7 @@ describe('BookSearchComponent', () => {
     addBook.click();
 
     expect(store.dispatch).toHaveBeenCalledWith(
-      addToReadingList({ book: {...bookToRead, isAdded: true} })
+      addToReadingList({ book: {...bookToRead, isAdded: true}, showSnackBar:true })
     );
   });
 
