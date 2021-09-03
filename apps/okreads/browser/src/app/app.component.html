@@ -1,15 +1,16 @@
 <mat-drawer-container class="app-container" [hasBackdrop]="true">
   <mat-drawer-content>
     <header class="header">
-      <div class="header--content">
-        <h1>okreads</h1>
+      <div class="header-content">
+        <h1>{{ constants.CONSTANTS.TITLE }}</h1>
         <div>
           <button
             data-testing="toggle-reading-list"
-            mat-button
+            mat-raised-button
             (click)="drawer.toggle()"
+            aria-label="open reading list"
           >
-            Reading List
+            {{ constants.CONSTANTS.READING_LIST }}
             <tmo-total-count></tmo-total-count>
           </button>
         </div>
@@ -22,8 +23,12 @@
   <mat-drawer #drawer mode="over" position="end">
     <div class="reading-list-container" data-testing="reading-list-container">
       <h2>
-        My Reading List
-        <button mat-icon-button (click)="drawer.close()">
+        {{ constants.CONSTANTS.MY_READING_LIST }}
+        <button
+          mat-icon-button
+          (click)="drawer.close()"
+          aria-label="close reading list"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </h2>
